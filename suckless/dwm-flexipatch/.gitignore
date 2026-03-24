@@ -1,5 +1,7 @@
 *.o
 dwm
 dwm-msg
-config.h
-patches.h
+# config.h   <-- Comment these out or delete them
+# patches.h  <-- Comment these out or delete them
+*.orig
+*.rej

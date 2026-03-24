@@ -22,11 +22,12 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-(setq doom-font (font-spec :family "Fira Code" :size 24 :weight 'semi-light))
-(add-to-list 'default-frame-alist '(internal-border-width . 80))
+(setq doom-font (font-spec :family "Input Mono Narrow" :size 22 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "Input Mono Narrow" :size 20))
+(add-to-list 'default-frame-alist '(internal-border-width . 2))
 ;; 1. Fix Zen Mode: prevent massive font and add a top margin
 (setq +zen-text-scale 0          ; Keep your custom size 24 font
-      writeroom-width 110        ; Center the text column
+      writeroom-width 1.0        ; Center the text column
       writeroom-top-margin 10)   ; Add that top "push" space
 
 ;; 2. Enable Zen Mode automatically for ALL your work types
@@ -34,9 +35,13 @@
 (add-hook 'text-mode-hook #'+zen/toggle) ; For notes/prose
 (add-hook 'conf-mode-hook #'+zen/toggle) ; For config files (the one you wanted!)
 
+(after! writeroom-mode
+  (setq writeroom-width 80) ; Set a fixed width for the "Zen" column
+  (if (not (display-graphic-p)) ; If in terminal mode...
+      (setq writeroom-fullscreen-effect nil))) ; Disable fullscreen hacks
+
 ;; 3. Permanent Visual Line Wrapping (Nvim-style)
 (global-visual-line-mode t)
-;;    doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -46,7 +51,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-zenburn)
+(setq doom-theme 'doom-Iosvkem)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -98,3 +103,38 @@
 
 ;; 3. Ensure pyenv is respected inside Emacs
 (setq nrepl-python-command "python") ; helpful for some python modules
+
+;; --- TOTAL BLACKOUT (OLED) ---
+
+;; 1. Global Background & Solaire Fix
+;; This forces inactive/active windows and margins to stay pure black.
+(custom-set-faces!
+  '(default :background "#000000")
+  '(fringe :background "#000000")
+  '(solaire-default-face :background "#000000")
+  '(solaire-base-face :background "#000000")
+  '(solaire-mode-line-face :background "#000000")
+  '(solaire-mode-line-inactive-face :background "#000000"))
+
+;; 2. Modeline (The Bottom Bar)
+(after! doom-modeline
+  (setq doom-modeline-bar-width 0) ; Removes the small colored vertical bar on the left
+  (custom-set-faces!
+    '(mode-line :background "#000000" :box nil)
+    '(mode-line-inactive :background "#000000" :box nil)
+    '(doom-modeline-bar :background "#000000")))
+
+;; 3. Centaur-Tabs (The Top Bar)
+(after! centaur-tabs
+  (custom-set-faces!
+    '(centaur-tabs-default :background "#000000")
+    '(centaur-tabs-selected :background "#000000")
+    '(centaur-tabs-unselected :background "#000000")
+    '(centaur-tabs-selected-modified :background "#000000")
+    '(centaur-tabs-unselected-modified :background "#000000")
+    '(centaur-tabs-active-bar-face :background "#000000")))
+
+;; 4. Terminal (Vterm) Background
+(after! vterm
+  (custom-set-faces!
+    '(vterm-color-black :background "#000000")))
